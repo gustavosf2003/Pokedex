@@ -1,0 +1,151 @@
+<template>
+    <div>
+        <div class="card has-text-centered">
+            <div>
+                <figure>
+                  <img :src="currentImg" alt="Placeholder image">
+                </figure>
+            </div>
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-content">
+                        <p class="title is-4">{{ num }}- {{ name | upper }}</p>
+                        <button @click="mudarSprite" class="button is-success mt-1 mr-2" src="../assets/svg/change.svg" >
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <b-button label="Info" type="is-primary" size="is-medium" @click="isCardModalActive = true" />
+                    </div>
+                </div>
+                
+                <b-modal v-model="isCardModalActive" :width="640">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="columns is-vcentered">
+                                <div class="media column is-one-quarter">
+                                    <div class="media-content">
+                                        <figure>
+                                            <img :src="currentImg" alt="Placeholder image" >
+                                        </figure>
+                                        <button @click="mudarSprite" class="button is-success" src="../assets/svg/change.svg" >
+                                            <i class="fas fa-sync-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="content column">
+                                    <h3 class="title is-4"><span class="subtitle is-4 has-text-weight-normal">#0{{ pokemon.id }} </span>{{name | upper}}</h3>
+                                    <hr />
+                                    <div class="has-text-left">
+                                        <p>
+                                            Type:  
+                                            <span v-if="!pokemonTypes">
+                                                {{pokemon.type | upper}}
+                                            </span>
+                                            
+                                            <span v-if="pokemon.type == 'grass' " class="tag is-white is-medium is-light">
+                                                <i class="fas fa-leaf has-text-success"></i>
+                                            </span>
+                                            <span v-if="pokemon.type == 'fire' " class="tag is-white is-medium is-light">
+                                                <i class="fas fa-fire has-text-danger"></i>
+                                            </span>                           
+                                            <span v-if="pokemon.type == 'water' " class="tag is-white is-medium is-light">
+                                                <i class="fas fa-tint has-text-link"></i>
+                                            </span>
+                                            <span v-if="pokemon.type == 'electric' " class="tag is-white is-medium is-light">
+                                                <i class="fas fa-bolt has-text-warning"></i>
+                                            </span>
+                                        </p>
+                                        <p>Height:  {{ pokemon.height | height }}</p>
+                                        <p>Weight:  {{ pokemon.weight | weight }}</p>
+                                        <p>Abilities:  {{ pokemon.ability | upper }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </b-modal>
+
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import axios from 'axios'
+
+export default {
+    components:{
+
+    },
+    data(){
+        return{
+            isCardModalActive: false,
+            isFront:true,
+            currentImg:'',
+            pokemonTypes:['fire','water','electric','grass'],
+            pokemon:{
+                type: '',
+                front: '',
+                back: '',
+                weight: '',
+                height: '',
+                ability: '',
+            }
+        }
+    },
+    created: function () {
+      axios.get(this.url).then(RESPOSTA =>{
+          this.pokemon.id = RESPOSTA.data.id
+          this.pokemon.type = RESPOSTA.data.types[0].type.name
+          this.pokemon.front = RESPOSTA.data.sprites.front_default
+          this.pokemon.back = RESPOSTA.data.sprites.back_default
+          this.pokemon.weight = RESPOSTA.data.weight
+          this.pokemon.height = RESPOSTA.data.height
+          this.pokemon.ability = RESPOSTA.data.abilities[0].ability.name
+          this.currentImg = this.pokemon.front
+          console.log(this.pokemon)
+      })  
+    },
+    props:{
+        num:Number,
+        name:String,
+        url:String
+    },
+    filters:{
+        upper: function (value) {
+            var newName= value[0].toUpperCase() + value.slice(1);
+            return newName
+        },
+        height: function (value) {
+            var newHeight  = value / 10
+            if (newHeight < 1) {
+                return newHeight * 100 + ' cm'
+            }else{
+                return newHeight + 'm'
+            }
+        },
+        weight: function (value) {
+            var newWeight  = value / 10
+            if (newWeight < 1) {
+                return newWeight * 100 + ' g'
+            }else{
+                return newWeight + ' kg'
+            }
+        }
+    },
+    methods:{
+        mudarSprite:function () {
+            if (this.isFront) {
+                this.isFront = false;
+                this.currentImg = this.pokemon.back
+            }else{
+                this.isFront= true
+                this.currentImg = this.pokemon.front
+            }
+        }
+    }
+}
+</script>
+
+<style>
+</style>
