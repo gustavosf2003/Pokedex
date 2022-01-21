@@ -9,7 +9,7 @@
             <div class="card-content">
                 <div class="media">
                     <div class="media-content">
-                        <p class="title is-4">{{ num }}- {{ name | upper }}</p>
+                        <p class="title is-4 is-capitalized">{{ num }}- {{ name }}</p>
                         <button @click="mudarSprite" class="button is-success mt-1 mr-2" src="../assets/svg/change.svg" >
                             <i class="fas fa-sync-alt"></i>
                         </button>
@@ -33,13 +33,13 @@
                                 </div>
 
                                 <div class="content column">
-                                    <h3 class="title is-4"><span class="subtitle is-4 has-text-weight-normal">#0{{ pokemon.id }} </span>{{name | upper}}</h3>
+                                    <h3 class="title is-4"><span class="subtitle is-4 has-text-weight-normal is-capitalized">#0{{ pokemon.id }} </span>{{ name }}</h3>
                                     <hr />
                                     <div class="has-text-left">
                                         <p>
                                             Type:  
-                                            <span v-if="!pokemonTypes">
-                                                {{pokemon.type | upper}}
+                                            <span class="is-capitalized" v-if="!pokemonTypes">
+                                                {{ pokemon.type }}
                                             </span>
                                             
                                             <span v-if="pokemon.type == 'grass' " class="tag is-white is-medium is-light">
@@ -57,7 +57,7 @@
                                         </p>
                                         <p>Height:  {{ pokemon.height | height }}</p>
                                         <p>Weight:  {{ pokemon.weight | weight }}</p>
-                                        <p>Abilities:  {{ pokemon.ability | upper }}</p>
+                                        <p class="is-capitalized">Abilities:  {{ pokemon.ability }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -103,7 +103,6 @@ export default {
           this.pokemon.height = RESPOSTA.data.height
           this.pokemon.ability = RESPOSTA.data.abilities[0].ability.name
           this.currentImg = this.pokemon.front
-          console.log(this.pokemon)
       })  
     },
     props:{
@@ -112,10 +111,6 @@ export default {
         url:String
     },
     filters:{
-        upper: function (value) {
-            var newName= value[0].toUpperCase() + value.slice(1);
-            return newName
-        },
         height: function (value) {
             var newHeight  = value / 10
             if (newHeight < 1) {

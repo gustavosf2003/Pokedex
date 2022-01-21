@@ -1,11 +1,6 @@
 <template>
   <div>
-    
     <Navbar />
-
-   
-
-    
     <div class="app column is-half is-offset-one-quarter">
       <div class="control has-icons-left has-icons-right mb-4">
         <input class="input is-medium" type="text" placeholder="Buscar" v-model="busca">
@@ -36,7 +31,7 @@ export default {
     }
   },
  
-  created:  function () {
+  created: function () {
     axios.get("https://pokeapi.co/api/v2/pokemon?limit=151&offset=0").then(NOME =>{
       console.log("Requisição Feita")
       this.pokemons = NOME.data.results;
@@ -56,5 +51,18 @@ export default {
 }
 </script>
 <style>
+/* Page Scroll*/
+body::-webkit-scrollbar{
+    width: 9px;
+    background-color: #2A2D34;
+}
 
+body::-webkit-scrollbar-track {
+  margin-top: 5rem;
+  background: hsl(0, 0%, 90%);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #2A2D34;
+}
 </style>
